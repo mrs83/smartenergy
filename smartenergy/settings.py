@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'django_filters',
     'crispy_forms',
+    'ws4redis',
     # Internal Apps
     'core',
     'api',
@@ -70,13 +71,18 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'ws4redis.context_processors.default'
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'smartenergy.wsgi.application'
 
+
+# WSGI_APPLICATION = 'smartenergy.wsgi.application'
+
+# WebSocket support
+WSGI_APPLICATION = 'ws4redis.django_runserver.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -142,6 +148,25 @@ REST_FRAMEWORK = {
 
 # Allow refresh of JWT Token.
 JWT_ALLOW_REFRESH = True
+
+# Webbsocket Support
+WEBSOCKET_URL = '/ws/'
+WS4REDIS_EXPIRE = 3600
+WS4REDIS_PREFIX = 'se'
+
+# Redis Cache & Sessions
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 
 
 # Import local settings.
