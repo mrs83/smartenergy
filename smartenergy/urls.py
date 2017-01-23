@@ -3,7 +3,7 @@ from django.contrib import admin
 from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework_jwt.views import refresh_jwt_token
 from rest_framework_swagger.views import get_swagger_view
-from api.views import router
+from api.routers import router
 
 
 schema_view = get_swagger_view(title='Smartenergy API')

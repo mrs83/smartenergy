@@ -1,4 +1,4 @@
-from rest_framework import viewsets, routers
+from rest_framework import viewsets
 from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -8,7 +8,7 @@ from.filters import MeasurementDateFilter
 from core.models import Room, Sensor, Measurement
 
 
-__all__ = ('router',)
+__all__ = ('RoomViewSet', 'SensorViewSet', 'MeasurementViewSet', 'UserViewSet')
 
 
 class RoomViewSet(viewsets.ModelViewSet):
@@ -33,7 +33,7 @@ class MeasurementViewSet(viewsets.ModelViewSet):
     serializer_class = MeasurementSerializer
     http_method_names = ('get', 'post')
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('sensor', 'created')
+    filter_fields = ('sensor',)
     filter_class = MeasurementDateFilter
 
     def get_queryset(self):
@@ -44,10 +44,3 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     http_method_names = ('get',)
-
-
-router = routers.DefaultRouter()
-router.register(r'rooms', RoomViewSet, base_name='room')
-router.register(r'sensors', SensorViewSet, base_name='sensor')
-router.register(r'measurements', MeasurementViewSet, base_name='measurement')
-router.register(r'users', UserViewSet)

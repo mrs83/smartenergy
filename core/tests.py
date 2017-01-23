@@ -1,13 +1,11 @@
-from unittest import mock
 import datetime
+from unittest import mock
 
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.utils.timezone import get_current_timezone
 
 from .models import Room, Sensor, Measurement
-
-
-# datetime.datetime.combine(datetime.date(2011, 01, 01), datetime.time(10, 23))
 
 
 class SmartEnergyTest(TestCase):
@@ -58,10 +56,14 @@ class SmartEnergyTest(TestCase):
             user=self.user
         )
         self.today = datetime.date(2017, 1, 22)
+        self.tz = get_current_timezone()
+        self.start_date = datetime.datetime.combine(self.today, datetime.time(0, 0, tzinfo=self.tz))
+        self.end_date = datetime.datetime.combine(self.today, datetime.time(23, 59, tzinfo=self.tz))
+
         for sensor, data in self.measurements.items():
             for row in data:
                 hours, mins = row[0]
-                created = datetime.datetime.combine(self.today, datetime.time(hours, mins))
+                created = datetime.datetime.combine(self.today, datetime.time(hours, mins, tzinfo=self.tz))
 
                 # Mock timezone.now to set created for Measurement.
                 with mock.patch('django.utils.timezone.now') as mock_now:
@@ -75,7 +77,20 @@ class SmartEnergyTest(TestCase):
         pass
 
     def test_measurement_total(self):
-        pass
+        oven_total = Measurement.objects.get_total_for_sensor(self.oven, start_date=self.start_date,
+                                                              end_date=self.end_date)
+        self.assertEqual(oven_total, 7898.150000000001)
+
+        dishwasher_total = Measurement.objects.get_total_for_sensor(self.dishwasher, start_date=self.start_date,
+                                                                    end_date=self.end_date)
+        self.assertEqual(dishwasher_total, 3549.48)
+
+    def test_sensor_total(self):
+        oven_total = self.oven.get_measurement_total(self.start_date, self.end_date)
+        self.assertEqual(oven_total, 7898.150000000001)
+
+        dishwasher_total = self.dishwasher.get_measurement_total(self.start_date, self.end_date)
+        self.assertEqual(dishwasher_total, 3549.48)
 
     def tearDown(self):
         self.oven.delete()

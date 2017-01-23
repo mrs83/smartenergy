@@ -7,8 +7,6 @@ __all__ = ('MeasurementDateFilter',)
 
 
 class MeasurementDateFilter(FilterSet):
-    # start_date = DateFilter(name='date',lookup_type=('gt'),)
-    # end_date = DateFilter(name='date',lookup_type=('lt'))
     date_range = DateRangeFilter(name='created')
 
     class Meta:
