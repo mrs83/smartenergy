@@ -7,22 +7,28 @@ __all__ = ('RoomSerializer', 'SensorSerializer', 'MeasurementSerializer', 'UserS
 
 
 class RoomSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+
     class Meta:
         model = Room
-        fields = ('name', 'description', 'user', 'created', 'updated')
+        fields = ('id', 'name', 'description', 'user', 'created', 'updated')
 
 
 class SensorSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+
     class Meta:
         model = Sensor
-        fields = ('room', 'mac_address', 'name', 'alias', 'paired', 'trusted', 'connected', 'blocked', 'user',
+        fields = ('id', 'room', 'mac_address', 'name', 'alias', 'paired', 'trusted', 'connected', 'blocked', 'user',
                   'created', 'updated')
 
 
 class MeasurementSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+
     class Meta:
         model = Measurement
-        fields = ('sensor', 'wh', 'created')
+        fields = ('id', 'sensor', 'wh', 'created')
 
 
 class UserSerializer(serializers.ModelSerializer):

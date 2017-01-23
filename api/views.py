@@ -1,25 +1,36 @@
 from rest_framework import viewsets, routers
-from core.models import Room, Sensor, Measurement
 from django.contrib.auth.models import User
+
+from .permissions import IsOwner
 from .serializers import RoomSerializer, SensorSerializer, MeasurementSerializer, UserSerializer
+from core.models import Room, Sensor, Measurement
 
 
 __all__ = ('router',)
 
 
 class RoomViewSet(viewsets.ModelViewSet):
-    queryset = Room.objects.all()
     serializer_class = RoomSerializer
+    permission_classes = (IsOwner,)
+
+    def get_queryset(self):
+        return Room.objects.filter(user=self.request.user)
 
 
 class SensorViewSet(viewsets.ModelViewSet):
-    queryset = Sensor.objects.all()
     serializer_class = SensorSerializer
+    permission_classes = (IsOwner,)
+
+    def get_queryset(self):
+        return Sensor.objects.filter(user=self.request.user)
 
 
 class MeasurementViewSet(viewsets.ModelViewSet):
-    queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
+    http_method_names = ('get', 'post')
+
+    def get_queryset(self):
+        return Measurement.objects.filter(sensor__user=self.request.user)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -29,7 +40,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 router = routers.DefaultRouter()
-router.register(r'rooms', RoomViewSet)
-router.register(r'sensors', SensorViewSet)
-router.register(r'measurements', MeasurementViewSet)
+router.register(r'rooms', RoomViewSet, base_name='room')
+router.register(r'sensors', SensorViewSet, base_name='sensor')
+router.register(r'measurements', MeasurementViewSet, base_name='measurement')
 router.register(r'users', UserViewSet)
