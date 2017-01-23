@@ -1,5 +1,6 @@
 from rest_framework import viewsets, routers
 from django.contrib.auth.models import User
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .permissions import IsOwner
 from .serializers import RoomSerializer, SensorSerializer, MeasurementSerializer, UserSerializer
@@ -20,6 +21,8 @@ class RoomViewSet(viewsets.ModelViewSet):
 class SensorViewSet(viewsets.ModelViewSet):
     serializer_class = SensorSerializer
     permission_classes = (IsOwner,)
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('room',)
 
     def get_queryset(self):
         return Sensor.objects.filter(user=self.request.user)
@@ -28,6 +31,8 @@ class SensorViewSet(viewsets.ModelViewSet):
 class MeasurementViewSet(viewsets.ModelViewSet):
     serializer_class = MeasurementSerializer
     http_method_names = ('get', 'post')
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('sensor', 'created')
 
     def get_queryset(self):
         return Measurement.objects.filter(sensor__user=self.request.user)

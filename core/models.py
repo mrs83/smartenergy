@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.timezone import now, make_aware
+from django.utils.timezone import now, timedelta
 from macaddress.fields import MACAddressField
 
 
@@ -44,11 +44,10 @@ class Sensor(BaseModel):
         return Measurement.objects.get_for_sensor(self)
 
     @property
-    def today_total(self):
-        today = datetime.date.today()
-        start = datetime.datetime.combine(today, datetime.time(0, 0))
-        end = datetime.datetime.combine(today, datetime.time(23, 59))
-        return self.get_measurement_total(make_aware(start), make_aware(end))
+    def daily_total(self):
+        end = now()
+        start = end - timedelta(hours=24)
+        return self.get_measurement_total(start, end)
 
     def __str__(self):
         return '{}: {}'.format(self.room, str(self.mac_address))

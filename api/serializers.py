@@ -20,12 +20,13 @@ class SensorSerializer(serializers.HyperlinkedModelSerializer):
     trusted = serializers.BooleanField()
     connected = serializers.BooleanField()
     blocked = serializers.BooleanField()
-    today_total = serializers.ReadOnlyField()
+    estimate = serializers.ReadOnlyField()
+    daily_total = serializers.ReadOnlyField()
 
     class Meta:
         model = Sensor
         fields = ('id', 'room', 'mac_address', 'name', 'alias', 'paired', 'trusted', 'connected', 'blocked', 'user',
-                  'today_total', 'created', 'updated')
+                  'estimate', 'daily_total', 'created', 'updated')
 
 
 class MeasurementSerializer(serializers.HyperlinkedModelSerializer):
