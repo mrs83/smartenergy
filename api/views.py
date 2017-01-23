@@ -4,6 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .permissions import IsOwner
 from .serializers import RoomSerializer, SensorSerializer, MeasurementSerializer, UserSerializer
+from.filters import MeasurementDateFilter
 from core.models import Room, Sensor, Measurement
 
 
@@ -33,6 +34,7 @@ class MeasurementViewSet(viewsets.ModelViewSet):
     http_method_names = ('get', 'post')
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('sensor', 'created')
+    filter_class = MeasurementDateFilter
 
     def get_queryset(self):
         return Measurement.objects.filter(sensor__user=self.request.user)
