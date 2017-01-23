@@ -16,15 +16,21 @@ class RoomSerializer(serializers.HyperlinkedModelSerializer):
 
 class SensorSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
+    paired = serializers.BooleanField()
+    trusted = serializers.BooleanField()
+    connected = serializers.BooleanField()
+    blocked = serializers.BooleanField()
+    today_total = serializers.ReadOnlyField()
 
     class Meta:
         model = Sensor
         fields = ('id', 'room', 'mac_address', 'name', 'alias', 'paired', 'trusted', 'connected', 'blocked', 'user',
-                  'created', 'updated')
+                  'today_total', 'created', 'updated')
 
 
 class MeasurementSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
+    wh = serializers.FloatField()
 
     class Meta:
         model = Measurement
@@ -32,6 +38,8 @@ class MeasurementSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'is_superuser')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'is_superuser')

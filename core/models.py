@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now, make_aware
 from macaddress.fields import MACAddressField
 
 
@@ -42,6 +43,13 @@ class Sensor(BaseModel):
     def get_all_measurement(self):
         return Measurement.objects.get_for_sensor(self)
 
+    @property
+    def today_total(self):
+        today = datetime.date.today()
+        start = datetime.datetime.combine(today, datetime.time(0, 0))
+        end = datetime.datetime.combine(today, datetime.time(23, 59))
+        return self.get_measurement_total(make_aware(start), make_aware(end))
+
     def __str__(self):
         return '{}: {}'.format(self.room, str(self.mac_address))
 
@@ -70,31 +78,30 @@ class MeasurementManager(models.Manager):
 
     def get_total_for_sensor(self, sensor, start_date, end_date=None):
         if not end_date:
-            end_date = datetime.datetime.now()
+            end_date = now()
 
         start = self.get_estimate_for_sensor(sensor, start_date)
         end = self.get_estimate_for_sensor(sensor, end_date)
 
         queryset = self.get_for_sensor(sensor).filter(created__gte=start_date, created__lte=end_date)
-
-        measurements = list(queryset)
+        measurements = list(queryset.values_list('wh', flat=True))
         if end:
             measurements.append(end)
 
         last_wh = None
         if start:
-            last_wh = start.wh
+            last_wh = start
 
         total = 0
         for m in measurements:
-            if last_wh and m.wh >= last_wh:
-                total += m.wh - last_wh
+            if last_wh and m >= last_wh:
+                total += m - last_wh
             else:
-                total += m.wh
+                total += m
 
-            last_wh = m.wh
+            last_wh = m
 
-        return total * 1000  # kWh
+        return total
 
 
 class Measurement(models.Model):
