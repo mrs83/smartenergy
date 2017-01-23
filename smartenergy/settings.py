@@ -25,7 +25,7 @@ SECRET_KEY = 'o&x=3nvwz^3xck_$wi(v$&@flbv322qil1hi*l&a4p3qyveu18'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -167,7 +167,8 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
-
+# Logging
+LOGGING_CONFIG = None
 
 # Import local settings.
 try:

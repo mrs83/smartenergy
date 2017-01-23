@@ -10,6 +10,7 @@ djangorestframework==3.5.3
 djangorestframework-jwt==1.9.0
 gevent==1.2.1
 greenlet==0.4.11
+honcho==0.7.1
 itypes==1.1.0
 Markdown==2.6.7
 netaddr==0.7.19
@@ -22,4 +23,5 @@ requests==2.12.5
 simplejson==3.10.0
 six==1.10.0
 uritemplate==3.0.0
+uWSGI==2.0.14
 wsaccel==0.6.2
