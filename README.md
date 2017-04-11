@@ -1,29 +1,13 @@
-# README #
+# Smart Energy #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+The purpose of this project is to provide a software and hardware-based solution to measure the energy
+consumption of devices.
 
-### What is this repository for? ###
+The project will consist of the following components:
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* Backend Server and Rest API
+* Frontend Client with responsive UI (WIP)
+* Desktop and Mobile client application (TODO)
+* Hardware-based smart plugs (TODO)
 
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+Any help and contribution is appreciated.
